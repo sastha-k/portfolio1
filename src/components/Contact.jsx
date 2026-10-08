@@ -132,7 +132,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-24 sm:py-32 bg-[#FCF8F2] border-b border-[#F2E5D1]">
+    <section id="contact" className="py-24 sm:py-32 bg-transparent border-b border-[#F2E5D1]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Product CTA Card Container */}

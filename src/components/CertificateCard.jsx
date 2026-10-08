@@ -1,90 +1,75 @@
 import React from 'react';
-import { Calendar, Building2, ArrowRight, ShieldCheck, Eye } from 'lucide-react';
-import TiltCard from './common/TiltCard';
+import { Calendar, Building2, ArrowUpRight, ShieldCheck, Eye } from 'lucide-react';
 
 export default function CertificateCard({ cert, onView }) {
   return (
-    <TiltCard maxTilt={4} className="h-full">
-      <div className="bg-white border border-zinc-200/90 rounded-[20px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] hover:border-zinc-300 transition-all duration-300 flex flex-col justify-between h-full group">
-        
-        <div>
-          {/* Certificate Preview Image - Preserving Original Ratio, Non-Stretched */}
-          <div
-            className="relative w-full h-56 sm:h-60 bg-zinc-50/90 overflow-hidden cursor-pointer flex items-center justify-center p-3.5 border-b border-zinc-100 group/img"
-            onClick={() => onView(cert)}
-          >
-            {/* Ambient background subtle grid */}
-            <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px] opacity-60 pointer-events-none" />
+    <div
+      onClick={() => onView(cert)}
+      className="group relative bg-white border border-[#F2E5D1] hover:border-[#8F0028] rounded-2xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 ease-out hover:-translate-y-1 flex flex-col justify-between h-full cursor-pointer text-left"
+    >
+      <div>
+        {/* Certificate Image Frame with Hover Image Zoom 1.03 and Slight Image Sharpening */}
+        <div className="relative w-full aspect-[4/3] bg-[#FAF4EB] overflow-hidden p-4 border-b border-[#F2E5D1] flex items-center justify-center">
+          <img
+            src={cert.previewImage}
+            alt={cert.title}
+            className="max-w-full max-h-full object-contain rounded-md shadow-xs transition-all duration-500 ease-out group-hover:scale-[1.03] contrast-[1.02] group-hover:contrast-[1.06] group-hover:saturate-[1.03]"
+            loading="lazy"
+          />
 
-            <img
-              src={cert.previewImage}
-              alt={cert.title}
-              className="max-w-full max-h-full w-auto h-auto object-contain rounded-md shadow-xs group-hover:scale-[1.02] transition-transform duration-300 ease-out"
-              loading="lazy"
-            />
-
-            {/* Category Pill (Top Left) */}
-            <div className="absolute top-3 left-3">
-              <span className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold bg-white/95 backdrop-blur-md text-zinc-800 border border-zinc-200/80 shadow-xs inline-flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
-                <span>{cert.category}</span>
-              </span>
-            </div>
-
-            {/* Hover Inspect Overlay */}
-            <div className="absolute inset-0 bg-zinc-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
-              <span className="px-3.5 py-1.5 rounded-xl bg-white text-zinc-900 text-xs font-semibold shadow-md inline-flex items-center gap-1.5 transform translate-y-2 group-hover:translate-y-0 transition-transform">
-                <Eye className="w-3.5 h-3.5 text-blue-600" />
-                <span>View Certificate</span>
-              </span>
-            </div>
+          {/* Category Pill Tag */}
+          <div className="absolute top-3 left-3">
+            <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase bg-[#1F1F1F] text-[#FCF8F2] tracking-wider pointer-events-none">
+              {cert.category}
+            </span>
           </div>
 
-          {/* Card Body */}
-          <div className="p-5 sm:p-6 space-y-3">
-            <h3
-              onClick={() => onView(cert)}
-              className="font-bold text-zinc-900 text-base sm:text-lg leading-snug group-hover:text-blue-600 cursor-pointer transition-colors line-clamp-2"
-              title={cert.title}
-            >
-              {cert.title}
-            </h3>
-
-            {/* Issuing Organization */}
-            {cert.issuer && (
-              <div className="flex items-start gap-2 text-xs text-zinc-600">
-                <Building2 className="w-3.5 h-3.5 text-zinc-400 mt-0.5 shrink-0" />
-                <span className="font-medium text-zinc-700 line-clamp-2">{cert.issuer}</span>
-              </div>
-            )}
-
-            {/* Date / Period if available */}
-            {cert.date && (
-              <div className="flex items-center gap-2 text-xs font-mono text-zinc-500">
-                <Calendar className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                <span>{cert.date}</span>
-              </div>
-            )}
+          {/* Hover View Certificate Action Overlay */}
+          <div className="absolute inset-0 bg-[#1F1F1F]/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center pointer-events-none">
+            <span className="px-4 py-2 rounded-lg bg-[#8F0028] text-white text-xs font-bold uppercase tracking-wider shadow-md inline-flex items-center gap-1.5 transform translate-y-1 group-hover:translate-y-0 transition-transform">
+              <Eye className="w-3.5 h-3.5" />
+              <span>VIEW CERTIFICATE</span>
+            </span>
           </div>
         </div>
 
-        {/* Card Footer Action */}
-        <div className="px-5 sm:px-6 pb-5 pt-3 border-t border-zinc-100 flex items-center justify-between">
-          <button
-            onClick={() => onView(cert)}
-            className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-900 hover:text-blue-600 transition-colors group/btn"
+        {/* Card Body */}
+        <div className="p-5 space-y-2.5">
+          <h3
+            className="font-bold text-[#1F1F1F] text-base leading-snug group-hover:text-[#8F0028] transition-colors line-clamp-2"
+            title={cert.title}
           >
-            <span>View Certificate</span>
-            <ArrowRight className="w-3.5 h-3.5 text-zinc-400 group-hover/btn:text-blue-600 group-hover/btn:translate-x-1 transition-transform" />
-          </button>
-          
-          <div className="flex items-center gap-1.5 text-[11px] font-mono text-emerald-600 font-medium">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Verified</span>
-          </div>
-        </div>
+            {cert.title}
+          </h3>
 
+          {cert.issuer && (
+            <div className="flex items-start gap-1.5 text-xs text-[#666666]">
+              <Building2 className="w-3.5 h-3.5 text-[#8F0028] mt-0.5 shrink-0" />
+              <span className="line-clamp-2">{cert.issuer}</span>
+            </div>
+          )}
+
+          {cert.date && (
+            <div className="flex items-center gap-1.5 text-xs font-mono text-[#8A8A8A]">
+              <Calendar className="w-3.5 h-3.5 text-[#8F0028] shrink-0" />
+              <span>{cert.date}</span>
+            </div>
+          )}
+        </div>
       </div>
-    </TiltCard>
+
+      {/* Card Footer */}
+      <div className="px-5 pb-5 pt-3 border-t border-[#F2E5D1] flex items-center justify-between">
+        <span className="text-xs font-bold text-[#8F0028] group-hover:underline inline-flex items-center gap-1">
+          <span>Inspect Document</span>
+          <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </span>
+
+        <div className="flex items-center gap-1 text-[11px] font-mono text-[#666666] font-medium">
+          <ShieldCheck className="w-3.5 h-3.5 text-[#8F0028]" />
+          <span>Verified</span>
+        </div>
+      </div>
+    </div>
   );
 }

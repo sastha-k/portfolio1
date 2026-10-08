@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import LoadingScreen from './components/common/LoadingScreen';
+import CustomCursor from './components/common/CustomCursor';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
-import Education from './components/Education';
-import Experience from './components/Experience';
 import Certificates from './components/Certificates';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
@@ -29,32 +28,33 @@ export default function App() {
 
   return (
     <>
-      {/* Animated Loading Screen */}
+      {/* Subtle Interactive Custom Cursor */}
+      <CustomCursor />
+
+      {/* 2D Minimal Loading Screen */}
       {loading && <LoadingScreen onFinish={() => setLoading(false)} />}
 
-      <div className="min-h-screen bg-[#fafafa] text-zinc-900 font-sans selection:bg-zinc-900 selection:text-white relative">
-        {/* Top Scroll Progress Bar */}
+      <div className="min-h-screen bg-[#FCF8F2] text-[#1F1F1F] font-sans selection:bg-[#8F0028] selection:text-[#FCF8F2] relative">
+        {/* Minimal Editorial Scroll Progress Bar */}
         <div
-          className="fixed top-0 left-0 h-[3px] bg-blue-600 z-[60] transition-all duration-100 ease-out"
+          className="fixed top-0 left-0 h-[2px] bg-[#8F0028] z-[60] transition-all duration-75 ease-out"
           style={{ width: `${scrollProgress}%` }}
         />
 
-        {/* Navigation Header */}
+        {/* Minimal Navigation */}
         <Navbar />
 
-        {/* Main Content Sections strictly adhering to structure */}
+        {/* Main Content Sections */}
         <main>
           <Hero />
           <About />
           <Skills />
           <Projects />
-          <Education />
-          <Experience />
           <Certificates />
           <Contact />
         </main>
 
-        {/* Footer */}
+        {/* Minimal Footer */}
         <Footer />
       </div>
     </>

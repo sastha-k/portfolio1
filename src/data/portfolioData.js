@@ -28,64 +28,38 @@ export const personalInfo = {
 
 export const skillsData = [
   {
-    category: "Technical Skills",
-    description: "Core UI/UX design methodologies and foundational technical literacy",
+    category: "Design & UX Methodology",
+    description: "Core UI/UX design methodologies, user research, and scalable design architectures",
     skills: [
       {
-        name: "UI Design",
-        category: "Visual & Interface",
-        description: "Visual hierarchy, layout design, typography, spacing, and micro-interactions."
+        name: "UI/UX",
+        category: "Visual & User Experience",
+        description: "Visual hierarchy, layout design, typography, spacing, intuitive navigation, and micro-interactions."
       },
       {
-        name: "UX Design",
-        category: "User Experience",
-        description: "Information architecture, user personas, task flows, and intuitive navigation."
+        name: "Figma",
+        category: "Primary Design Tool",
+        description: "Auto-layout, reusable component kits, interactive variables, design tokens, and developer handoff."
       },
       {
         name: "Wireframing",
         category: "Ideation & Structure",
-        description: "Low and mid-fidelity wireframes translating concepts into structured layouts."
+        description: "Low and mid-fidelity wireframes translating complex requirements into clear layouts."
       },
       {
         name: "Prototyping",
         category: "Interaction Design",
-        description: "Interactive clickable prototypes demonstrating transitions and user flows."
-      },
-      {
-        name: "User Research",
-        category: "Empathy & Discovery",
-        description: "Analyzing user behavior, pain points, usability testing, and feedback loops."
+        description: "Interactive clickable prototypes demonstrating animations, page transitions, and user flows."
       },
       {
         name: "Design Systems",
         category: "Scalability",
-        description: "Standardized component libraries, typography scales, color tokens, and variants."
-      },
-      {
-        name: "HTML/CSS Basics",
-        category: "Frontend Literacy",
-        description: "Understanding web markup, CSS flexbox/grid, and developer handoff alignment."
-      },
-      {
-        name: "Flutter Basics",
-        category: "Mobile Literacy",
-        description: "Understanding cross-platform mobile widget hierarchy and responsive UI patterns."
-      }
-    ]
-  },
-  {
-    category: "UI/UX Tools",
-    description: "Industry-standard design, prototyping, and visual asset tools",
-    skills: [
-      {
-        name: "Figma",
-        category: "Primary Design Tool",
-        description: "Auto-layout, reusable components, interactive prototypes, design tokens, and dev handoff."
+        description: "Standardized token systems, atomic components, accessible typography, and variant libraries."
       },
       {
         name: "Adobe XD",
         category: "UI/UX Prototyping",
-        description: "Vector-based interface design, artboard systems, and transition prototyping."
+        description: "Vector interface design, artboard systems, and transition prototyping."
       },
       {
         name: "Canva",
@@ -93,60 +67,119 @@ export const skillsData = [
         description: "Rapid visual asset composition, brand presentations, and social graphics."
       }
     ]
+  },
+  {
+    category: "Development & Engineering",
+    description: "Core programming languages, mobile engineering, and frontend frameworks",
+    skills: [
+      {
+        name: "React",
+        category: "Frontend Library",
+        description: "Component-driven user interfaces, hooks, state management, and modern responsive web layouts."
+      },
+      {
+        name: "Flutter",
+        category: "Cross-Platform Mobile",
+        description: "Mobile UI widget hierarchies, responsive mobile patterns, and fluid animations across Android/iOS."
+      },
+      {
+        name: "Java",
+        category: "Object-Oriented Programming",
+        description: "Short Term Diploma in Java (A+ Grade). OOP architecture, collections, multithreading, and logic."
+      },
+      {
+        name: "Python",
+        category: "Programming & Scripting",
+        description: "Advanced Diploma (A++ Grade). Algorithmic problem solving, data handling, and automation scripting."
+      }
+    ]
+  },
+  {
+    category: "AI & Emerging Tech",
+    description: "Modern generative AI tools, prompt workflows, and AI-assisted design systems",
+    skills: [
+      {
+        name: "Google AI Studio",
+        category: "AI Model Prototyping",
+        description: "Multimodal Gemini prototyping, system instructions, temperature tuning, and rapid AI workflow creation."
+      },
+      {
+        name: "Prompt Engineering",
+        category: "Generative AI",
+        description: "Structured prompt design, few-shot conditioning, chain-of-thought prompting, and contextual AI workflows."
+      }
+    ]
   }
 ];
 
 export const projectsData = [
   {
-    id: "food-delivery-app",
-    title: "Food Delivery App UI",
-    tagline: "Modern, Appetizing & Frictionless Food Ordering Experience",
-    category: "Mobile App UI",
-    tools: ["Figma", "UI Design", "Wireframing", "Prototyping"],
+    id: "best-life-ai",
+    title: "Best Life AI",
+    tagline: "Intelligent Wellness & Productivity Optimization Platform",
+    category: "AI Product Design",
+    tools: ["Figma", "Google AI Studio", "Prompt Engineering", "Design Systems"],
     resumeDescription:
-      "A complete user-centered mobile interface designed to streamline meal discovery, restaurant browsing, cart customization, and checkout. Designed with intuitive touch targets, vibrant visual accents, and clear status tracking.",
+      "An intelligent, human-centered wellness platform powered by multimodal generative AI. Features proactive habit tracking, latency-optimized recommendation streams, and conversational UX with Gemini 1.5 orchestration.",
     keyPoints: [
-      "Intuitive home feed with categorized cuisine chips and instant search",
-      "Dynamic restaurant detail screen with dietary tags and clear add-ons",
-      "Streamlined 3-step checkout flow reducing cart abandonment",
-      "Live order tracking screen with animated delivery milestone progression"
+      "Real-time wellness telemetry with multimodal Gemini 1.5 Pro prompt pipelines",
+      "Dynamic habit pulse visualization and low-latency metrics dashboard",
+      "Conversational AI interface conditioned with few-shot and chain-of-thought prompts",
+      "Cohesive dark/light design token hierarchy adhering to accessibility criteria"
     ],
-    deliverables: ["Low-fidelity Wireframes", "High-fidelity UI Screens", "Interactive Prototype", "UI Component Kit"],
-    image: "/projects/food-delivery.svg"
+    deliverables: ["Full Dashboard Architecture", "AI Interaction Guidelines", "Interactive Figma Prototype", "Design Tokens"],
+    image: "/projects/bestlife-ai.svg"
   },
   {
-    id: "ecommerce-app-redesign",
-    title: "E-Commerce App Redesign",
-    tagline: "Conversion-Focused Retail Interface & Shopping Flow",
-    category: "App Redesign",
-    tools: ["Figma", "UX Design", "User Research", "Design Systems"],
+    id: "urban-mobility-analytics",
+    title: "Urban Mobility Analytics",
+    tagline: "Live Fleet Telemetry & Transit Optimization Dashboard",
+    category: "Data Visualization & Dashboard",
+    tools: ["UI/UX", "Figma", "Data Visualization", "User Journeys"],
     resumeDescription:
-      "A comprehensive UX/UI redesign of an e-commerce shopping experience. Focused on simplifying complex product catalogues, improving search filter discoverability, and creating a modern, clutter-free product detail page.",
+      "A high-density municipal mobility telemetry platform engineered to monitor real-time transit congestion, public bus transit schedules, and fleet distribution across dense metropolitan grids.",
     keyPoints: [
-      "Revamped product filtering and sorting interface for faster item discovery",
-      "Minimalist product cards emphasizing clear imagery, ratings, and price contrast",
-      "Persuasive Product Detail Page (PDP) with sticky 'Add to Bag' action",
-      "Consistent typography hierarchy and accessible color contrast standards"
+      "Interactive geospatial telemetry showing live GPS fleet movement and density",
+      "Predictive congestion analytics reducing average commuter transit delays",
+      "Clutter-free typography hierarchy prioritizing rapid critical status comprehension",
+      "High-contrast data visualization cards and responsive modular widget layouts"
     ],
-    deliverables: ["UX Audit & Pain Point Mapping", "Interactive Prototype", "Product Grid Redesign", "Checkout Wireframes"],
-    image: "/projects/ecommerce-redesign.svg"
+    deliverables: ["Fleet Management UI", "Data Visualization System", "User Flow Diagrams", "Component Variants"],
+    image: "/projects/urban-mobility.svg"
   },
   {
-    id: "banking-app-concept",
-    title: "Banking App UI Concept",
-    tagline: "Trust-Centric, Secure & Minimalist Financial Dashboard",
-    category: "Fintech UI Concept",
-    tools: ["Figma", "Adobe XD", "Wireframing", "Prototyping"],
+    id: "document-verification",
+    title: "Document Verification",
+    tagline: "Cryptographic Certificate & Credential Authentication UI",
+    category: "Enterprise Security UX",
+    tools: ["Figma", "UX Research", "Design Systems", "Prototyping"],
     resumeDescription:
-      "A clean, professional digital banking concept designed to make financial management simple, secure, and stress-free. Featuring clear balance visibility, quick peer-to-peer transfers, and transparent expense breakdowns.",
+      "An enterprise-grade document authenticity platform designed for instant cryptographic credential verification, OCR scanning inspection, and verifiable trust score auditing for universities and employers.",
     keyPoints: [
-      "Modern card swipe interaction for multiple debit/credit card accounts",
-      "Quick-action hub for instantaneous payments, bill pay, and QR scan",
-      "Clean financial analytics charts with categorized spending insights",
-      "Biometric security prompts and clear transaction confirmation states"
+      "Instant tamper-detection scanner with OCR inspection guidelines and trust scores",
+      "Clear visual indicators for cryptographic seals, issuing bodies, and timestamps",
+      "Streamlined verification workflow cutting manual audit time by over 60%",
+      "Accessible confirmation states and comprehensive cryptographic audit history"
     ],
-    deliverables: ["Financial Dashboard UI", "Transfer Flow Wireframes", "Interactive Prototype", "Design System Tokens"],
-    image: "/projects/banking-concept.svg"
+    deliverables: ["Verification Flow UX", "Audit Dashboard UI", "Interactive Prototype", "Accessibility Specs"],
+    image: "/projects/document-verification.svg"
+  },
+  {
+    id: "flutter-applications",
+    title: "Flutter Applications",
+    tagline: "Cross-Platform Mobile FinTech & Productivity Suite",
+    category: "Mobile Application UI",
+    tools: ["Flutter", "Figma", "Mobile UI", "Micro-Interactions"],
+    resumeDescription:
+      "A cross-platform mobile suite featuring frictionless mobile wallet interactions, biometric confirmation states, and modular responsive widget architectures running natively across Android and iOS.",
+    keyPoints: [
+      "Custom responsive Flutter widget tree optimized for diverse mobile viewports",
+      "Fluid micro-interactions for balance transfers, expense categorization, and QR scans",
+      "Pixel-perfect translation from Figma auto-layout designs to native Flutter code",
+      "State-driven card flip interactions and smooth 60fps gesture animations"
+    ],
+    deliverables: ["Native Mobile UI", "Flutter Widget Library", "Gesture Interaction Flow", "App Store Mockups"],
+    image: "/projects/flutter-apps.svg"
   }
 ];
 

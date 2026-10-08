@@ -22,7 +22,7 @@ export default function CertificateViewer({ cert, currentIndex, totalCount, onCl
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-zinc-950/80 backdrop-blur-md overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[#1F1F1F]/75 backdrop-blur-sm overflow-y-auto">
         
         {/* Backdrop click to close */}
         <motion.div
@@ -40,20 +40,20 @@ export default function CertificateViewer({ cert, currentIndex, totalCount, onCl
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.96, opacity: 0, y: 8 }}
           transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-white rounded-[24px] max-w-5xl w-full max-h-[94vh] overflow-y-auto shadow-2xl border border-zinc-200 relative z-10 flex flex-col"
+          className="bg-[#FCF8F2] rounded-2xl max-w-5xl w-full max-h-[94vh] overflow-y-auto shadow-2xl border-2 border-[#8F0028] relative z-10 flex flex-col text-[#1F1F1F]"
         >
           {/* Top Bar with Navigation Controls & Close */}
-          <div className="p-4 sm:p-6 border-b border-zinc-100 flex items-center justify-between gap-4 sticky top-0 bg-white/95 backdrop-blur-md z-20">
-            <div className="space-y-1 min-w-0">
+          <div className="p-4 sm:p-6 border-b border-[#F2E5D1] flex items-center justify-between gap-4 sticky top-0 bg-[#FCF8F2] z-20">
+            <div className="space-y-1 min-w-0 text-left">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-blue-50 text-blue-700 border border-blue-200/60">
+                <span className="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold uppercase bg-[#8F0028] text-white">
                   {cert.category}
                 </span>
-                <span className="text-xs font-mono text-zinc-400">
+                <span className="text-xs font-mono text-[#666666]">
                   Certificate {currentIndex + 1} of {totalCount}
                 </span>
               </div>
-              <h3 className="text-lg sm:text-2xl font-extrabold text-zinc-900 leading-tight truncate" title={cert.title}>
+              <h3 className="text-lg sm:text-2xl font-black text-[#1F1F1F] leading-tight truncate uppercase" title={cert.title}>
                 {cert.title}
               </h3>
             </div>
@@ -62,55 +62,54 @@ export default function CertificateViewer({ cert, currentIndex, totalCount, onCl
             <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <button
                 onClick={onPrev}
-                className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold transition-colors"
-                title="Previous Certificate (Left Arrow)"
+                className="inline-flex items-center gap-1 px-3 py-2 rounded-lg bg-white hover:bg-[#FAF4EB] text-[#1F1F1F] border border-[#F2E5D1] text-xs font-bold uppercase transition-colors cursor-pointer"
+                title="Previous Certificate"
               >
-                <ChevronLeft className="w-4 h-4" />
-                <span className="hidden sm:inline">Previous</span>
+                <ChevronLeft className="w-4 h-4 text-[#8F0028]" />
+                <span className="hidden sm:inline">Prev</span>
               </button>
 
               <button
                 onClick={onNext}
-                className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold transition-colors"
-                title="Next Certificate (Right Arrow)"
+                className="inline-flex items-center gap-1 px-3 py-2 rounded-lg bg-white hover:bg-[#FAF4EB] text-[#1F1F1F] border border-[#F2E5D1] text-xs font-bold uppercase transition-colors cursor-pointer"
+                title="Next Certificate"
               >
                 <span className="hidden sm:inline">Next</span>
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-4 h-4 text-[#8F0028]" />
               </button>
 
               <button
                 onClick={onClose}
-                className="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-600 hover:text-zinc-900 transition-colors ml-1"
-                aria-label="Close Modal (Escape)"
-                title="Close (Esc)"
+                className="p-2 rounded-lg bg-white hover:bg-[#8F0028] hover:text-white text-[#1F1F1F] border border-[#F2E5D1] transition-colors ml-1 cursor-pointer"
+                aria-label="Close Modal"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
           </div>
 
-          {/* Full Certificate Image View Area - Preserving Original Proportions */}
-          <div className="p-3 sm:p-6 md:p-8 bg-zinc-100/70 flex items-center justify-center min-h-[320px] sm:min-h-[480px] relative">
-            <div className="relative max-w-full rounded-xl overflow-hidden shadow-lg border border-zinc-200 bg-white">
+          {/* Certificate Image View Area */}
+          <div className="p-4 sm:p-8 bg-[#FAF4EB] flex items-center justify-center min-h-[320px] sm:min-h-[460px] border-b border-[#F2E5D1]">
+            <div className="relative max-w-full rounded-xl overflow-hidden shadow-md border border-[#F2E5D1] bg-white p-2">
               <img
                 src={cert.previewImage}
                 alt={cert.title}
-                className="max-h-[62vh] w-auto max-w-full object-contain mx-auto block"
+                className="max-h-[62vh] w-auto max-w-full object-contain mx-auto block rounded-lg"
               />
             </div>
           </div>
 
-          {/* Certificate Metadata & Footer Actions */}
-          <div className="p-5 sm:p-7 space-y-4 bg-white border-t border-zinc-100">
+          {/* Certificate Metadata & Details */}
+          <div className="p-5 sm:p-7 space-y-4 bg-[#FCF8F2] text-left">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
               {cert.issuer && (
-                <div className="flex items-start gap-2.5 p-3.5 bg-zinc-50 rounded-xl border border-zinc-100">
-                  <Building2 className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
+                <div className="flex items-start gap-2.5 p-3.5 bg-white rounded-xl border border-[#F2E5D1]">
+                  <Building2 className="w-4 h-4 text-[#8F0028] mt-0.5 shrink-0" />
                   <div>
-                    <span className="text-[10px] font-mono uppercase text-zinc-400 font-bold block">
-                      Issuing Organization
+                    <span className="text-[10px] font-mono uppercase text-[#666666] font-bold block">
+                      ISSUING ORGANIZATION
                     </span>
-                    <span className="font-semibold text-zinc-800 text-xs sm:text-sm">
+                    <span className="font-bold text-[#1F1F1F] text-xs sm:text-sm mt-0.5 block">
                       {cert.issuer}
                     </span>
                   </div>
@@ -118,13 +117,13 @@ export default function CertificateViewer({ cert, currentIndex, totalCount, onCl
               )}
 
               {cert.date && (
-                <div className="flex items-start gap-2.5 p-3.5 bg-zinc-50 rounded-xl border border-zinc-100">
-                  <Calendar className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
+                <div className="flex items-start gap-2.5 p-3.5 bg-white rounded-xl border border-[#F2E5D1]">
+                  <Calendar className="w-4 h-4 text-[#8F0028] mt-0.5 shrink-0" />
                   <div>
-                    <span className="text-[10px] font-mono uppercase text-zinc-400 font-bold block">
-                      Date / Period
+                    <span className="text-[10px] font-mono uppercase text-[#666666] font-bold block">
+                      DATE OF ISSUANCE / PERIOD
                     </span>
-                    <span className="font-semibold text-zinc-800 text-xs sm:text-sm">
+                    <span className="font-bold text-[#1F1F1F] text-xs sm:text-sm mt-0.5 block font-mono">
                       {cert.date}
                     </span>
                   </div>
@@ -133,55 +132,44 @@ export default function CertificateViewer({ cert, currentIndex, totalCount, onCl
             </div>
 
             {cert.details && (
-              <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed bg-blue-50/40 p-3.5 rounded-xl border border-blue-100/80">
-                {cert.details}
-              </p>
+              <div className="p-4 bg-white rounded-xl border border-[#F2E5D1] space-y-1">
+                <span className="text-[10px] font-mono uppercase text-[#8F0028] font-bold block">
+                  VERIFICATION SCOPE &amp; DETAILS
+                </span>
+                <p className="text-xs text-[#1F1F1F]/80 leading-relaxed font-normal">
+                  {cert.details}
+                </p>
+              </div>
             )}
 
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-              <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium font-mono">
-                <ShieldCheck className="w-4 h-4" />
-                <span>
-                  {cert.certId ? `ID: ${cert.certId}` : 'Verified Authentic Document'}
-                </span>
+            {/* Footer Actions */}
+            <div className="pt-2 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-1.5 text-xs font-mono text-[#8F0028] font-bold">
+                <ShieldCheck className="w-4 h-4 text-[#8F0028]" />
+                <span>100% Resume Authenticated</span>
               </div>
 
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={onClose}
-                  className="px-4 py-2.5 rounded-xl border border-zinc-200 text-zinc-700 text-xs font-semibold hover:bg-zinc-100 transition-colors"
-                >
-                  Close
-                </button>
-
-                {cert.isPdf ? (
+              <div className="flex items-center gap-2">
+                {cert.fullDocument && (
                   <a
                     href={cert.fullDocument}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-900 text-white text-xs font-semibold hover:bg-blue-600 shadow-sm transition-all duration-200"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#8F0028] text-white text-xs font-bold uppercase hover:bg-[#A81038] transition-colors"
                   >
-                    <FileText className="w-3.5 h-3.5" />
-                    <span>Open Original PDF</span>
+                    <span>OPEN FULL DOCUMENT</span>
                     <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                ) : (
-                  <a
-                    href={cert.fullDocument}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-900 text-white text-xs font-semibold hover:bg-blue-600 shadow-sm transition-all duration-200"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    <span>Open Original Certificate</span>
                   </a>
                 )}
+                <button
+                  onClick={onClose}
+                  className="px-4 py-2 rounded-lg bg-white border border-[#F2E5D1] text-[#1F1F1F] text-xs font-bold uppercase hover:bg-[#FAF4EB] transition-colors cursor-pointer"
+                >
+                  CLOSE
+                </button>
               </div>
             </div>
-
           </div>
-
         </motion.div>
       </div>
     </AnimatePresence>

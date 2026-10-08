@@ -1,243 +1,238 @@
-import React, { useRef, useState, useEffect, Suspense } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Image, Float } from '@react-three/drei';
-import * as THREE from 'three';
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion';
 import { personalInfo } from '../../data/portfolioData';
-import { Sparkles, Compass, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
-/* Subtle Minimalist Floating Abstract 3D Shapes */
-function FloatingAbstractShapes() {
-  const torusRef = useRef();
-  const sphereRef = useRef();
-  const pillRef = useRef();
-
-  useFrame((state, delta) => {
-    const t = state.clock.getElapsedTime();
-    if (torusRef.current) {
-      torusRef.current.rotation.x = t * 0.25;
-      torusRef.current.rotation.y = t * 0.35;
-      torusRef.current.position.y = 1.3 + Math.sin(t * 0.8) * 0.12;
-    }
-    if (sphereRef.current) {
-      sphereRef.current.position.y = -1.3 + Math.cos(t * 0.7) * 0.1;
-      sphereRef.current.position.x = -2.1 + Math.sin(t * 0.5) * 0.08;
-    }
-    if (pillRef.current) {
-      pillRef.current.rotation.z = t * 0.2;
-      pillRef.current.rotation.x = t * 0.15;
-      pillRef.current.position.y = 1.6 + Math.cos(t * 0.6) * 0.1;
-    }
-  });
-
-  return (
-    <group>
-      {/* Frosted translucent minimalist Torus */}
-      <mesh ref={torusRef} position={[2.1, 1.3, -0.4]}>
-        <torusGeometry args={[0.42, 0.06, 16, 48]} />
-        <meshStandardMaterial
-          color="#3b82f6"
-          roughness={0.2}
-          metalness={0.1}
-          transparent
-          opacity={0.7}
-        />
-      </mesh>
-
-      {/* Subtle floating sphere */}
-      <mesh ref={sphereRef} position={[-2.1, -1.3, 0.2]}>
-        <sphereGeometry args={[0.24, 32, 32]} />
-        <meshStandardMaterial
-          color="#60a5fa"
-          roughness={0.25}
-          metalness={0.1}
-          transparent
-          opacity={0.65}
-        />
-      </mesh>
-
-      {/* Floating minimalist cylinder / pill */}
-      <mesh ref={pillRef} position={[-2.0, 1.6, -0.3]}>
-        <cylinderGeometry args={[0.12, 0.12, 0.45, 24]} />
-        <meshStandardMaterial
-          color="#93c5fd"
-          roughness={0.3}
-          metalness={0.1}
-          transparent
-          opacity={0.6}
-        />
-      </mesh>
-    </group>
-  );
-}
-
-/* 3D Portrait Card Mesh with Mouse Parallax */
-function PortraitMesh() {
-  const cardGroupRef = useRef();
-
-  useFrame((state) => {
-    if (!cardGroupRef.current) return;
-    // Parallax mouse tilt with smooth damping
-    const targetRotY = (state.pointer.x * Math.PI) / 9;
-    const targetRotX = (-state.pointer.y * Math.PI) / 11;
-    const targetPosX = state.pointer.x * 0.25;
-    const targetPosY = state.pointer.y * 0.2;
-
-    cardGroupRef.current.rotation.y = THREE.MathUtils.lerp(
-      cardGroupRef.current.rotation.y,
-      targetRotY,
-      0.08
-    );
-    cardGroupRef.current.rotation.x = THREE.MathUtils.lerp(
-      cardGroupRef.current.rotation.x,
-      targetRotX,
-      0.08
-    );
-    cardGroupRef.current.position.x = THREE.MathUtils.lerp(
-      cardGroupRef.current.position.x,
-      targetPosX,
-      0.08
-    );
-    cardGroupRef.current.position.y = THREE.MathUtils.lerp(
-      cardGroupRef.current.position.y,
-      targetPosY,
-      0.08
-    );
-  });
-
-  return (
-    <group ref={cardGroupRef}>
-      {/* 3D Card Backplate (White, beveled appearance) */}
-      <mesh position={[0, 0, -0.06]}>
-        <boxGeometry args={[3.04, 3.84, 0.08]} />
-        <meshStandardMaterial
-          color="#ffffff"
-          roughness={0.15}
-          metalness={0.05}
-        />
-      </mesh>
-
-      {/* Subtle border trim */}
-      <mesh position={[0, 0, -0.03]}>
-        <boxGeometry args={[3.08, 3.88, 0.04]} />
-        <meshStandardMaterial
-          color="#e2e8f0"
-          roughness={0.3}
-          metalness={0.0}
-        />
-      </mesh>
-
-      {/* Actual Portrait Photo of Sastha K */}
-      <Suspense fallback={null}>
-        <Image
-          url="/sastha.jpeg"
-          scale={[2.92, 3.72]}
-          radius={0.08}
-          toneMapped={false}
-          position={[0, 0, 0.02]}
-        />
-      </Suspense>
-    </group>
-  );
-}
-
-/* Scene Setup inside Canvas */
-function Portrait3DScene() {
-  return (
-    <>
-      <ambientLight intensity={1.1} />
-      <directionalLight position={[4, 5, 4]} intensity={1.2} />
-      <directionalLight position={[-4, -3, 2]} intensity={0.5} color="#dbeafe" />
-      <pointLight position={[0, 3, 3]} intensity={0.4} color="#ffffff" />
-      
-      <Float
-        speed={1.5}
-        rotationIntensity={0.2}
-        floatIntensity={0.3}
-        floatingRange={[-0.08, 0.08]}
-      >
-        <PortraitMesh />
-        <FloatingAbstractShapes />
-      </Float>
-    </>
-  );
-}
-
-/* Fallback card if WebGL is unavailable */
-function CSSCardFallback() {
-  return (
-    <div className="w-full h-full flex items-center justify-center p-4">
-      <div className="relative w-full max-w-[340px] sm:max-w-[380px] rounded-3xl overflow-hidden bg-white border border-zinc-200 shadow-xl transition-transform hover:scale-[1.02] duration-300">
-        <img
-          src="/sastha.jpeg"
-          alt="Sastha K - UI/UX Designer"
-          className="w-full h-[420px] object-cover object-top"
-        />
-      </div>
-    </div>
-  );
-}
-
-/* Main Exported Component */
 export default function PortraitCard3D() {
-  const [hasWebGLError, setHasWebGLError] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const containerRef = useRef(null);
+  const shouldReduceMotion = useReducedMotion();
+  const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const checkViewport = () => {
+      const mobile =
+        typeof window !== 'undefined' &&
+        (window.matchMedia('(pointer: coarse)').matches ||
+          window.innerWidth < 1024 ||
+          'ontouchstart' in window);
+      setIsMobile(mobile);
+    };
+    checkViewport();
+    window.addEventListener('resize', checkViewport);
+    return () => window.removeEventListener('resize', checkViewport);
   }, []);
 
-  if (!mounted) return null;
+  // Mouse parallax motion values (normalized [-1, 1])
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Soft responsive spring for delicate cursor response
+  const springConfig = { damping: 30, stiffness: 220, mass: 0.4 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  // Very subtle mouse parallax strictly clamped to 3px
+  const parallaxX = useTransform(smoothX, [-1, 1], [-3, 3]);
+  const parallaxY = useTransform(smoothY, [-1, 1], [-3, 3]);
+
+  const handleMouseMove = (e) => {
+    if (shouldReduceMotion || isMobile || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+    mouseX.set(Math.max(-1, Math.min(1, x)));
+    mouseY.set(Math.max(-1, Math.min(1, y)));
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  const handleMouseEnter = () => {
+    if (!isMobile) {
+      setIsHovered(true);
+    }
+  };
+
+  // Organic snake-like wave keyframes (6–8s duration, fluid S-curve)
+  const waveVariants = {
+    animate: shouldReduceMotion
+      ? { x: 0, y: 0, rotate: 0 }
+      : isMobile
+      ? {
+          // Mobile: significantly reduced gentle wave
+          x: [-1.8, 0, 1.8, 0, -1.8],
+          y: [-1, 1, -1, 1, -1],
+          rotate: [-0.4, 0, 0.4, 0, -0.4],
+        }
+      : {
+          // Desktop: full organic snake-like curved wave
+          x: [-5.5, 0, 5.5, 0, -5.5],
+          y: [-2.5, 2.5, -2, 2, -2.5],
+          rotate: [-1.4, 0, 1.4, 0, -1.4],
+        },
+  };
+
+  // Outer frame complementary organic motion
+  const outerFrameVariants = {
+    animate: shouldReduceMotion
+      ? { x: 0, y: 0, rotate: -2 }
+      : isMobile
+      ? {
+          x: [0.8, -0.8, 0.8, -0.8, 0.8],
+          y: [0.5, -0.5, 0.5, -0.5, 0.5],
+          rotate: [-2.3, -2, -1.7, -2, -2.3],
+        }
+      : {
+          x: [2, -2, 2, -2, 2],
+          y: [1.5, -1.5, 1, -1, 1.5],
+          rotate: [-2.8, -1.8, -0.8, -1.8, -2.8],
+        },
+  };
 
   return (
-    <div className="relative w-full max-w-[480px] mx-auto select-none">
-      {/* Decorative ambient backdrop glow */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-blue-100/60 to-indigo-100/40 rounded-3xl filter blur-2xl transform scale-95 opacity-70" />
+    // Page load entrance: opacity 0 -> 1, scale 0.96 -> 1, 800ms ease-out
+    <motion.div
+      initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      className="relative w-full max-w-[340px] sm:max-w-[370px] lg:max-w-[390px] aspect-[4/5] mx-auto select-none"
+    >
+      {/* Container with mouse tracking */}
+      <div
+        ref={containerRef}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className="relative w-full h-full"
+      >
+        {/* Outer Background Frame: animates with subtle complementary organic wave */}
+        <motion.div
+          variants={outerFrameVariants}
+          animate="animate"
+          transition={{
+            duration: 7,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: 0.15,
+          }}
+          className="absolute inset-1 sm:inset-2 rounded-3xl bg-[#F2E5D1]/70 border border-[#8F0028]/15 pointer-events-none transition-colors duration-300"
+        />
 
-      {/* 3D Canvas Container */}
-      <div className="relative w-full h-[460px] sm:h-[520px] rounded-3xl bg-white/40 border border-zinc-200/80 backdrop-blur-sm shadow-[0_20px_50px_rgba(0,0,0,0.06)] overflow-visible flex items-center justify-center">
-        {hasWebGLError ? (
-          <CSSCardFallback />
-        ) : (
-          <Canvas
-            camera={{ position: [0, 0, 5.2], fov: 45 }}
-            className="w-full h-full cursor-grab active:cursor-grabbing"
-            onError={() => setHasWebGLError(true)}
+        {/* Snake-like / Organic Wave Card Wrapper: side-to-side, curved bending, 7s loop */}
+        <motion.div
+          variants={waveVariants}
+          animate="animate"
+          transition={{
+            duration: 7,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+          className="relative w-full h-full"
+        >
+          {/* Main Photo Card in Modern Rounded Frame with Mouse Parallax (X: 3px, Y: 3px) */}
+          <motion.div
+            style={{
+              x: shouldReduceMotion || isMobile ? 0 : parallaxX,
+              y: shouldReduceMotion || isMobile ? 0 : parallaxY,
+            }}
+            className={`relative w-full h-full rounded-2xl sm:rounded-3xl overflow-hidden bg-white p-2.5 sm:p-3 border transition-all duration-300 ease-out ${
+              isHovered
+                ? 'border-[#8F0028]/45 shadow-2xl shadow-[#8F0028]/12'
+                : 'border-[#F2E5D1] shadow-xl shadow-[#8F0028]/5'
+            }`}
           >
-            <Suspense fallback={null}>
-              <Portrait3DScene />
-            </Suspense>
-          </Canvas>
-        )}
+            {/* Actual Professional User Portrait Photo Container */}
+            <div className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden bg-[#FAF4EB]">
+              {/* Photo Image: zoom 1.02 on hover, 100% stable crop & face */}
+              <motion.img
+                src={personalInfo.photo || '/sastha.jpeg'}
+                alt={personalInfo.name}
+                animate={{
+                  scale: isHovered && !shouldReduceMotion ? 1.02 : 1,
+                }}
+                transition={{
+                  duration: 0.4,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="w-full h-full object-cover object-top filter contrast-[1.02] brightness-[1.01]"
+                loading="eager"
+              />
 
-        {/* Floating Verified Badge (Bottom Left) */}
-        <div className="absolute -bottom-3 -left-3 sm:-bottom-4 sm:-left-4 bg-white/95 backdrop-blur-md border border-zinc-200/90 rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center gap-3 z-20">
-          <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
-            <Compass className="w-5 h-5" />
-          </div>
-          <div className="text-left">
-            <div className="text-xs font-bold text-zinc-900 flex items-center gap-1">
-              <span>{personalInfo.title}</span>
-              <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
-            </div>
-            <div className="text-[11px] font-mono text-zinc-500">
-              {personalInfo.degree}
-            </div>
-          </div>
-        </div>
+              {/* Gentle bottom gradient for readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1F1F1F]/60 via-transparent to-transparent pointer-events-none" />
 
-        {/* Floating Target Badge (Top Right) */}
-        <div className="absolute -top-3 -right-2 sm:-top-4 sm:-right-4 bg-white/95 backdrop-blur-md border border-zinc-200/90 rounded-2xl px-3.5 py-2 shadow-lg flex items-center gap-2 z-20">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-          <div className="text-left">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-600 block">
-              Target Company
-            </span>
-            <span className="text-xs font-extrabold text-zinc-900">
-              {personalInfo.targetCompany}
+              {/* Bottom Card Label */}
+              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white pointer-events-none">
+                <div>
+                  <p className="font-bold text-sm tracking-tight">{personalInfo.name}</p>
+                  <p className="text-[11px] font-mono text-[#F2E5D1] tracking-wider uppercase">
+                    Developer • UI/UX Designer
+                  </p>
+                </div>
+
+                {/* Small Burgundy Dot: subtle pulse opacity 0.7 -> 1 -> 0.7, slow 2.5s loop */}
+                <motion.div
+                  animate={
+                    shouldReduceMotion
+                      ? { opacity: 1 }
+                      : { opacity: [0.7, 1, 0.7] }
+                  }
+                  transition={{
+                    duration: 2.5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                  className="w-2.5 h-2.5 rounded-full bg-[#8F0028] border-2 border-white shadow-xs"
+                />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Floating Status Tag (Top-Right): seamlessly follows the wave motion */}
+          <div className="absolute -top-3 -right-3 sm:-right-4 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-[#F2E5D1] shadow-md flex items-center gap-2 pointer-events-none z-10">
+            <motion.span
+              animate={
+                shouldReduceMotion
+                  ? { opacity: 1 }
+                  : { opacity: [0.7, 1, 0.7] }
+              }
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+              className="w-2 h-2 rounded-full bg-[#8F0028]"
+            />
+            <span className="text-[11px] font-mono font-bold text-[#1F1F1F] tracking-tight">
+              Target: {personalInfo.targetCompany}
             </span>
           </div>
-        </div>
+
+          {/* "AVAILABLE FOR ROLES" BADGE: Anchored inside wave wrapper so it naturally follows the card */}
+          <motion.div
+            animate={
+              shouldReduceMotion
+                ? { y: 0 }
+                : { y: [-1.5, 1.5, -1.5] }
+            }
+            transition={{
+              duration: 4.5,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+            className="absolute -bottom-3 -left-3 sm:-left-4 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-[#F2E5D1] shadow-md flex items-center gap-2 pointer-events-none z-10 text-xs"
+          >
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#8F0028]" />
+            <span className="text-[11px] font-mono text-[#666666] font-medium">
+              Available for Roles
+            </span>
+          </motion.div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

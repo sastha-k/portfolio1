@@ -5,6 +5,7 @@
 @layer base {
   :root {
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Playfair Display', Georgia, serif;
     --font-mono: 'JetBrains Mono', monospace;
   }
 
@@ -15,8 +16,8 @@
 
   body {
     font-family: var(--font-sans);
-    background-color: #fafafa;
-    color: #18181b;
+    background-color: #FCF8F2;
+    color: #1F1F1F;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
@@ -25,49 +26,94 @@
   }
 
   ::selection {
-    background-color: #18181b;
-    color: #ffffff;
+    background-color: #8F0028;
+    color: #FCF8F2;
   }
 }
 
-/* Custom Minimalist Scrollbar */
+/* Custom Minimalist Editorial Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f4f4f5;
+  background: #FCF8F2;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d4d4d8;
-  border-radius: 4px;
+  background: #E4D2B8;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a1a1aa;
+  background: #8F0028;
 }
 
-/* Canvas container helper */
-.webgl-canvas-container {
-  touch-action: none;
-  pointer-events: auto;
+/* Editorial Underline Animation & Text Hover Effect (Left -> Right Underline + Horizontal Shift) */
+.editorial-link,
+.editorial-hover-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s ease;
 }
 
-/* Glassmorphism helpers */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(228, 228, 231, 0.8);
+.editorial-link::after,
+.editorial-hover-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #8F0028;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-panel-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+.editorial-link:hover,
+.editorial-hover-link:hover {
+  transform: translateX(4px);
 }
 
-.glass-panel-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
-  border-color: rgba(212, 212, 216, 1);
+.editorial-link:hover::after,
+.editorial-hover-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Editorial Border Rule */
+.editorial-border {
+  border-color: #F2E5D1;
+}
+
+/* Image Clip Reveal */
+@keyframes clipReveal {
+  from {
+    clip-path: inset(100% 0% 0% 0%);
+    opacity: 0.8;
+  }
+  to {
+    clip-path: inset(0% 0% 0% 0%);
+    opacity: 1;
+  }
+}
+
+.animate-clip-reveal {
+  animation: clipReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Reduced Motion Fallback */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .editorial-link:hover,
+  .editorial-hover-link:hover {
+    transform: none !important;
+  }
 }

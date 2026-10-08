@@ -1,134 +1,128 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { skillsData } from '../data/portfolioData';
-import TiltCard from './common/TiltCard';
-import {
-  Layers,
-  Palette,
-  Compass,
-  Layout,
-  FileCode2,
-  Smartphone,
-  CheckCircle2,
-  PenTool,
-  Wand2
-} from 'lucide-react';
-
-const iconMap = {
-  "UI Design": Palette,
-  "UX Design": Compass,
-  "Wireframing": Layout,
-  "Prototyping": Layers,
-  "User Research": Compass,
-  "Design Systems": Layers,
-  "HTML/CSS Basics": FileCode2,
-  "Flutter Basics": Smartphone,
-  "Figma": PenTool,
-  "Adobe XD": Layout,
-  "Canva": Wand2
-};
+import { motion, useReducedMotion } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 
 export default function Skills() {
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [hoveredIdx, setHoveredIdx] = useState(null);
+  const shouldReduceMotion = useReducedMotion();
+  const editorialEase = [0.16, 1, 0.3, 1];
 
-  const categories = ['All', ...skillsData.map((c) => c.category)];
+  // Exact 9 skills specified by user
+  const skillsList = [
+    { num: '01', name: 'React', category: 'Frontend Architecture' },
+    { num: '02', name: 'Flutter', category: 'Cross-Platform Mobile' },
+    { num: '03', name: 'Java', category: 'Object-Oriented Programming' },
+    { num: '04', name: 'Python', category: 'Programming & Scripting' },
+    { num: '05', name: 'Figma', category: 'UI/UX Prototyping' },
+    { num: '06', name: 'UI/UX', category: 'Human-Centered Design' },
+    { num: '07', name: 'Design Systems', category: 'Design Architecture' },
+    { num: '08', name: 'Google AI Studio', category: 'Multimodal AI Prototyping' },
+    { num: '09', name: 'Prompt Engineering', category: 'Generative AI Workflows' },
+  ];
 
-  const displayedGroups =
-    selectedCategory === 'All'
-      ? skillsData
-      : skillsData.filter((c) => c.category === selectedCategory);
+  const secondaryTools = ['Adobe XD', 'Canva', 'Wireframing', 'Prototyping', 'User Research', 'HTML/CSS'];
 
   return (
-    <section id="skills" className="py-24 bg-[#fafafa]">
+    <section id="skills" className="py-24 sm:py-32 bg-[#FCF8F2] border-b border-[#F2E5D1]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-3xl mx-auto mb-14 space-y-3"
-        >
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold tracking-wide uppercase">
-            <Layers className="w-3.5 h-3.5" />
-            <span>Design Competencies &amp; Tools</span>
+        {/* Section Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-[#F2E5D1] mb-12">
+          <div>
+            <span className="text-xs font-mono text-[#8F0028] font-bold tracking-widest uppercase block mb-1">
+              02 — CAPABILITIES &amp; STACK
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-black text-[#1F1F1F] tracking-tight uppercase">
+              SKILLS
+            </h2>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 tracking-tight">
-            Skills &amp; Design Tools
-          </h2>
-          <p className="text-zinc-600 text-sm sm:text-base">
-            Sourced strictly from my resume. Hover over any card for interactive 3D perspective feedback.
+          <p className="text-xs font-mono text-[#666666] max-w-xs text-left sm:text-right uppercase">
+            Compact technical stack &amp; design disciplines.
           </p>
-        </motion.div>
-
-        {/* Category Filters */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
-                selectedCategory === cat
-                  ? 'bg-zinc-900 text-white shadow-sm'
-                  : 'bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-100 hover:text-zinc-900'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
         </div>
 
-        {/* Skills Cards Grid */}
-        <div className="space-y-12">
-          {displayedGroups.map((group, gIdx) => (
-            <div key={gIdx} className="space-y-5">
-              <div className="border-b border-zinc-200/80 pb-2 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                <h3 className="text-lg font-bold text-zinc-900">
-                  {group.category}
-                </h3>
-                <span className="text-xs font-mono text-zinc-500">
-                  {group.description}
-                </span>
-              </div>
+        {/* Compact Interactive Skill Rows/Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {skillsList.map((skill, idx) => {
+            const isHovered = hoveredIdx === idx;
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                {group.skills.map((skill, sIdx) => {
-                  const IconComponent = iconMap[skill.name] || Layers;
+            return (
+              <motion.div
+                key={skill.name}
+                initial={{
+                  opacity: shouldReduceMotion ? 1 : 0,
+                  y: shouldReduceMotion ? 0 : 12,
+                }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                viewport={{ once: true, margin: '-30px' }}
+                transition={{
+                  duration: 0.45,
+                  delay: shouldReduceMotion ? 0 : (idx % 3) * 0.05,
+                  ease: editorialEase,
+                }}
+                onMouseEnter={() => setHoveredIdx(idx)}
+                onMouseLeave={() => setHoveredIdx(null)}
+                className={`group px-5 py-4 rounded-xl border transition-all duration-200 cursor-default flex items-center justify-between gap-3 text-left ${
+                  isHovered
+                    ? 'bg-white border-[#8F0028]/50 shadow-md shadow-[#8F0028]/5 -translate-y-0.5'
+                    : 'bg-white/80 border-[#F2E5D1] hover:bg-white shadow-xs'
+                }`}
+              >
+                {/* Number & Skill Name */}
+                <div className="flex items-center gap-3.5">
+                  <span
+                    className={`font-mono text-xs font-bold transition-colors duration-200 ${
+                      isHovered ? 'text-[#8F0028]' : 'text-[#8A8A8A]'
+                    }`}
+                  >
+                    {skill.num}
+                  </span>
 
-                  return (
-                    <TiltCard key={sIdx} maxTilt={10}>
-                      <div className="bg-white border border-zinc-200 rounded-2xl p-5 hover:border-blue-400 hover:shadow-clean-lg transition-all duration-200 flex flex-col justify-between h-full group">
-                        <div>
-                          <div className="flex items-start justify-between gap-2 mb-3">
-                            <div className="w-10 h-10 rounded-xl bg-zinc-50 border border-zinc-200/80 text-zinc-700 flex items-center justify-center group-hover:bg-blue-50 group-hover:text-blue-600 group-hover:border-blue-200 transition-colors shadow-sm">
-                              <IconComponent className="w-5 h-5" />
-                            </div>
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-zinc-50 text-zinc-500 border border-zinc-200">
-                              {skill.category}
-                            </span>
-                          </div>
+                  <span
+                    className={`font-black text-base sm:text-lg tracking-tight uppercase transition-colors duration-200 ${
+                      isHovered ? 'text-[#8F0028]' : 'text-[#1F1F1F]'
+                    }`}
+                  >
+                    {skill.name}
+                  </span>
+                </div>
 
-                          <h4 className="font-bold text-zinc-900 text-base mb-1.5 group-hover:text-blue-600 transition-colors">
-                            {skill.name}
-                          </h4>
+                {/* Category Tag & Arrow */}
+                <div className="flex items-center gap-2">
+                  <span className="hidden md:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono text-[#666666] bg-[#FAF4EB] border border-[#F2E5D1]">
+                    {skill.category}
+                  </span>
+                  <ArrowUpRight
+                    className={`w-3.5 h-3.5 transition-all duration-200 ${
+                      isHovered
+                        ? 'text-[#8F0028] opacity-100 translate-x-0.5 -translate-y-0.5'
+                        : 'text-[#8A8A8A] opacity-0'
+                    }`}
+                  />
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
 
-                          <p className="text-zinc-600 text-xs leading-relaxed">
-                            {skill.description}
-                          </p>
-                        </div>
-
-                        <div className="pt-3 mt-3 border-t border-zinc-100 flex items-center gap-1 text-[11px] font-mono text-emerald-600 font-medium">
-                          <CheckCircle2 className="w-3.5 h-3.5" />
-                          <span>Resume Verified</span>
-                        </div>
-                      </div>
-                    </TiltCard>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+        {/* Secondary Competencies Row */}
+        <div className="mt-10 pt-6 border-t border-[#F2E5D1] flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-left">
+          <span className="text-xs font-mono text-[#8F0028] font-bold uppercase tracking-wider">
+            ADDITIONAL PROFICIENCIES:
+          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            {secondaryTools.map((tool) => (
+              <span
+                key={tool}
+                className="px-3 py-1 bg-white border border-[#F2E5D1] rounded-md text-xs font-mono font-medium text-[#1F1F1F]"
+              >
+                {tool}
+              </span>
+            ))}
+          </div>
         </div>
 
       </div>

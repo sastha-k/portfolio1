@@ -14,12 +14,12 @@ export default function LoadingScreen({ onFinish }) {
           setTimeout(() => {
             setIsLoaded(true);
             if (onFinish) onFinish();
-          }, 250);
+          }, 150);
           return 100;
         }
-        return prev + Math.floor(Math.random() * 22 + 15);
+        return prev + Math.floor(Math.random() * 25 + 20);
       });
-    }, 60);
+    }, 40);
 
     return () => clearInterval(timer);
   }, [onFinish]);
@@ -30,52 +30,32 @@ export default function LoadingScreen({ onFinish }) {
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#fafafa]"
+          transition={{ duration: 0.35, ease: 'easeInOut' }}
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#FCF8F2] text-[#1F1F1F]"
         >
-          {/* 3D Minimal Wireframe Cube */}
-          <div className="relative w-20 h-20 mb-8 flex items-center justify-center perspective-[800px]">
-            <motion.div
-              animate={{
-                rotateX: [0, 360],
-                rotateY: [0, 360],
-                rotateZ: [0, 180],
-              }}
-              transition={{
-                duration: 3.5,
-                repeat: Infinity,
-                ease: 'linear',
-              }}
-              className="w-14 h-14 border-2 border-zinc-900/80 rounded-xl relative shadow-sm"
-              style={{
-                transformStyle: 'preserve-3d',
-              }}
-            >
-              <div className="absolute inset-2 flex items-center justify-center p-1">
-                <img
-                  src={personalInfo.logo || "/logo.png"}
-                  alt={`${personalInfo.name} Logo`}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-            </motion.div>
+          {/* Minimal 2D Editorial Logo Mark */}
+          <div className="w-14 h-14 rounded-2xl bg-[#8F0028] p-3 flex items-center justify-center mb-6 shadow-md">
+            <img
+              src={personalInfo.logo || "/logo.png"}
+              alt="Sastha K Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
 
-          {/* Title & Status */}
-          <div className="text-center space-y-2">
-            <h2 className="text-sm font-bold tracking-wider text-zinc-900 font-mono">
-              SASTHA K // UI/UX PORTFOLIO
-            </h2>
-            <div className="text-xs font-mono text-zinc-500 flex items-center justify-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
-              <span>Loading 3D Experience... {progress}%</span>
-            </div>
+          {/* Typography Lockup */}
+          <div className="text-center space-y-1 mb-8">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tightest uppercase text-[#1F1F1F]">
+              {personalInfo.name}
+            </h1>
+            <p className="text-xs font-mono tracking-widest text-[#8F0028] uppercase font-bold">
+              DEVELOPER × UI/UX DESIGNER
+            </p>
           </div>
 
-          {/* Minimalist Progress Bar */}
-          <div className="w-48 h-1 bg-zinc-200 rounded-full mt-6 overflow-hidden">
+          {/* Clean Editorial Progress Line */}
+          <div className="w-48 h-1 bg-[#F2E5D1] rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-zinc-900"
+              className="h-full bg-[#8F0028]"
               style={{ width: `${Math.min(progress, 100)}%` }}
               transition={{ ease: 'easeOut' }}
             />

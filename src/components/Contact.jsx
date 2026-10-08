@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { personalInfo } from '../data/portfolioData';
-import TiltCard from './common/TiltCard';
-import { Mail, MapPin, Copy, Check, Send, Download, MessageSquare, AlertCircle, Loader2 } from 'lucide-react';
+import { Mail, MapPin, Send, AlertCircle, Loader2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import emailjs from '@emailjs/browser';
+import MagneticButton from './common/MagneticButton';
 
 // EmailJS Vite Environment Variables
 const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -18,6 +18,8 @@ export default function Contact() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [errors, setErrors] = useState({});
+  const shouldReduceMotion = useReducedMotion();
+  const editorialEase = [0.16, 1, 0.3, 1];
 
   const [formData, setFormData] = useState({
     name: '',
@@ -35,7 +37,6 @@ export default function Contact() {
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    // Clear validation error when user begins typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: '' }));
     }
@@ -47,12 +48,10 @@ export default function Contact() {
   const validateForm = () => {
     const newErrors = {};
 
-    // 1. Name required
     if (!formData.name.trim()) {
       newErrors.name = 'Full Name is required';
     }
 
-    // 2. Valid email required
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
       newErrors.email = 'Email address is required';
@@ -60,7 +59,6 @@ export default function Contact() {
       newErrors.email = 'Please enter a valid email address';
     }
 
-    // 3. Phone required
     const phoneTrimmed = formData.phone.trim();
     if (!phoneTrimmed) {
       newErrors.phone = 'Phone number is required';
@@ -68,12 +66,10 @@ export default function Contact() {
       newErrors.phone = 'Please enter a valid phone number (at least 7 digits)';
     }
 
-    // 4. Subject required
     if (!formData.subject.trim()) {
       newErrors.subject = 'Subject is required';
     }
 
-    // 5. Message required
     if (!formData.message.trim()) {
       newErrors.message = 'Message is required';
     }
@@ -84,14 +80,9 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Prevent duplicate submissions while in-flight
     if (isSubmitting) return;
-
-    // Reset feedback states
     setErrorMessage('');
 
-    // Perform validation
     if (!validateForm()) {
       return;
     }
@@ -100,13 +91,10 @@ export default function Contact() {
 
     try {
       if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
-        console.error(
-          '[EmailJS] Missing environment variables. Please ensure VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_TEMPLATE_ID, and VITE_EMAILJS_PUBLIC_KEY are defined in your .env file.'
-        );
+        console.error('[EmailJS] Missing environment variables.');
         throw new Error('EmailJS credentials are not configured');
       }
 
-      // Send form data to EmailJS template using emailjs.sendForm
       await emailjs.sendForm(
         SERVICE_ID,
         TEMPLATE_ID,
@@ -114,7 +102,6 @@ export default function Contact() {
         PUBLIC_KEY
       );
 
-      // Successful submission: show success state and clear the form
       setIsSuccess(true);
       setFormData({
         name: '',
@@ -130,347 +117,220 @@ export default function Contact() {
 
       try {
         confetti({
-          particleCount: 80,
-          spread: 70,
+          particleCount: 50,
+          spread: 60,
           origin: { y: 0.7 },
+          colors: ['#8F0028', '#F2E5D1', '#D64F63', '#1F1F1F'],
         });
-      } catch (err) {
-        // Confetti fallback
-      }
+      } catch (err) {}
     } catch (error) {
       console.error('[Contact Form Error]', error);
-      setErrorMessage('Unable to send your message. Please try again.');
+      setErrorMessage('Unable to send your message right now. Please reach out directly via email.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-
   return (
-    <section id="contact" className="py-24 bg-white border-y border-zinc-200/80">
+    <section id="contact" className="py-24 sm:py-32 bg-[#FCF8F2] border-b border-[#F2E5D1]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-2xl mx-auto mb-16 space-y-3"
-        >
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold tracking-wide uppercase">
-            <MessageSquare className="w-3.5 h-3.5" />
-            <span>Connect Directly</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 tracking-tight">
-            Get in Touch
-          </h2>
-          <p className="text-zinc-600 text-sm sm:text-base">
-            Open for customer enquiries, UI/UX Designer opportunities, and collaborations.
-          </p>
-        </motion.div>
+        {/* Product CTA Card Container */}
+        <div className="bg-white border border-[#F2E5D1] rounded-3xl p-8 sm:p-12 lg:p-16 shadow-sm">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+            
+            {/* Left Column: Heading & Introduction */}
+            <div className="lg:col-span-5 space-y-6 text-left">
+              <div>
+                <span className="text-xs font-mono text-[#8F0028] font-bold tracking-widest uppercase block mb-3">
+                  05 — INITIATE COLLABORATION
+                </span>
+                <h2 className="text-3xl sm:text-5xl lg:text-[46px] font-black text-[#1F1F1F] tracking-tight leading-tight">
+                  Let's build something meaningful.
+                </h2>
+              </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 max-w-5xl mx-auto">
-          
-          {/* Left Column: Contact Coordinates */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="lg:col-span-5 space-y-6"
-          >
-            <TiltCard maxTilt={8}>
-              <div className="bg-[#fafafa] border border-zinc-200 rounded-3xl p-7 sm:p-8 space-y-6 shadow-clean-md">
-                <div>
-                  <h3 className="text-lg font-bold text-zinc-900">
-                    Direct Contact Details
-                  </h3>
-                  <p className="text-xs text-zinc-500 font-mono mt-0.5">
-                    Official coordinates from resume
-                  </p>
+              <p className="text-sm sm:text-base text-[#1F1F1F]/75 leading-relaxed font-normal">
+                Available for UI/UX Designer (Fresher) positions, internships, and collaborative software projects. Target company: <strong className="text-[#8F0028] font-bold">{personalInfo.targetCompany}</strong>.
+              </p>
+
+              {/* Direct Info Pills */}
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center justify-between p-3.5 bg-[#FAF4EB] border border-[#F2E5D1] rounded-xl text-xs">
+                  <div className="flex items-center gap-2.5">
+                    <Mail className="w-4 h-4 text-[#8F0028]" />
+                    <span className="font-mono font-bold text-[#1F1F1F]">{personalInfo.email}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleCopyEmail}
+                    className="px-2 py-0.5 text-[10px] font-mono font-bold text-[#8F0028] hover:bg-[#8F0028] hover:text-white rounded transition-colors cursor-pointer"
+                  >
+                    {copied ? 'COPIED' : 'COPY'}
+                  </button>
                 </div>
 
-                {/* Email Card with Copy & Direct Mailto */}
-                <div className="space-y-2">
-                  <span className="text-xs font-mono text-zinc-500 uppercase tracking-wider block">
-                    Email Address
-                  </span>
-                  <div className="flex items-center justify-between p-3.5 bg-white border border-zinc-200 rounded-xl shadow-sm">
-                    <a
-                      href={`mailto:${personalInfo.email}`}
-                      className="flex items-center gap-2.5 min-w-0 hover:text-blue-600 transition-colors"
-                      title="Send direct email"
-                    >
-                      <Mail className="w-4 h-4 text-blue-600 shrink-0" />
-                      <span className="text-xs sm:text-sm font-mono text-zinc-800 truncate font-medium">
-                        {personalInfo.email}
-                      </span>
-                    </a>
+                <div className="p-3.5 bg-[#FAF4EB] border border-[#F2E5D1] rounded-xl flex items-center gap-2.5 text-xs font-mono text-[#666666]">
+                  <MapPin className="w-4 h-4 text-[#8F0028]" />
+                  <span>{personalInfo.location}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Clean Form */}
+            <div className="lg:col-span-7 text-left">
+              {/* Success Message Banner */}
+              {isSuccess && (
+                <div className="mb-6 p-4 rounded-xl bg-[#FAF4EB] border border-[#8F0028] text-[#8F0028] text-xs font-mono font-bold flex items-center justify-between">
+                  <span>Message dispatched successfully! Sastha will reply promptly.</span>
+                  <button
+                    type="button"
+                    onClick={() => setIsSuccess(false)}
+                    className="text-xs underline cursor-pointer"
+                  >
+                    Send another
+                  </button>
+                </div>
+              )}
+
+              {/* Error Message Banner */}
+              {errorMessage && (
+                <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-mono flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{errorMessage}</span>
+                </div>
+              )}
+
+              {/* The Form */}
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-4" noValidate>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Full Name */}
+                  <div className="space-y-1">
+                    <label htmlFor="name" className="text-xs font-mono font-bold text-[#1F1F1F] uppercase tracking-wider block">
+                      FULL NAME <span className="text-[#8F0028]">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      placeholder="Alex Rivera"
+                      className={`w-full px-4 py-3 bg-[#FAF4EB] border rounded-xl text-xs sm:text-sm text-[#1F1F1F] placeholder-[#8A8A8A] focus:outline-none focus:bg-white transition-all ${
+                        errors.name ? 'border-red-400' : 'border-[#F2E5D1] focus:border-[#8F0028]'
+                      }`}
+                    />
+                    {errors.name && <span className="text-[11px] font-mono text-red-600 block">{errors.name}</span>}
+                  </div>
+
+                  {/* Email Address */}
+                  <div className="space-y-1">
+                    <label htmlFor="email" className="text-xs font-mono font-bold text-[#1F1F1F] uppercase tracking-wider block">
+                      EMAIL ADDRESS <span className="text-[#8F0028]">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      placeholder="alex@company.com"
+                      className={`w-full px-4 py-3 bg-[#FAF4EB] border rounded-xl text-xs sm:text-sm text-[#1F1F1F] placeholder-[#8A8A8A] focus:outline-none focus:bg-white transition-all ${
+                        errors.email ? 'border-red-400' : 'border-[#F2E5D1] focus:border-[#8F0028]'
+                      }`}
+                    />
+                    {errors.email && <span className="text-[11px] font-mono text-red-600 block">{errors.email}</span>}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Phone Number */}
+                  <div className="space-y-1">
+                    <label htmlFor="phone" className="text-xs font-mono font-bold text-[#1F1F1F] uppercase tracking-wider block">
+                      PHONE NUMBER <span className="text-[#8F0028]">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={(e) => handleInputChange('phone', e.target.value)}
+                      placeholder="+91 98765 43210"
+                      className={`w-full px-4 py-3 bg-[#FAF4EB] border rounded-xl text-xs sm:text-sm text-[#1F1F1F] placeholder-[#8A8A8A] focus:outline-none focus:bg-white transition-all ${
+                        errors.phone ? 'border-red-400' : 'border-[#F2E5D1] focus:border-[#8F0028]'
+                      }`}
+                    />
+                    {errors.phone && <span className="text-[11px] font-mono text-red-600 block">{errors.phone}</span>}
+                  </div>
+
+                  {/* Subject */}
+                  <div className="space-y-1">
+                    <label htmlFor="subject" className="text-xs font-mono font-bold text-[#1F1F1F] uppercase tracking-wider block">
+                      SUBJECT / INQUIRY <span className="text-[#8F0028]">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="subject"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={(e) => handleInputChange('subject', e.target.value)}
+                      placeholder="UI/UX Fresher Opportunity"
+                      className={`w-full px-4 py-3 bg-[#FAF4EB] border rounded-xl text-xs sm:text-sm text-[#1F1F1F] placeholder-[#8A8A8A] focus:outline-none focus:bg-white transition-all ${
+                        errors.subject ? 'border-red-400' : 'border-[#F2E5D1] focus:border-[#8F0028]'
+                      }`}
+                    />
+                    {errors.subject && <span className="text-[11px] font-mono text-red-600 block">{errors.subject}</span>}
+                  </div>
+                </div>
+
+                {/* Message */}
+                <div className="space-y-1">
+                  <label htmlFor="message" className="text-xs font-mono font-bold text-[#1F1F1F] uppercase tracking-wider block">
+                    MESSAGE <span className="text-[#8F0028]">*</span>
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
+                    value={formData.message}
+                    onChange={(e) => handleInputChange('message', e.target.value)}
+                    placeholder="Share role details, scope, or timeline..."
+                    className={`w-full px-4 py-3 bg-[#FAF4EB] border rounded-xl text-xs sm:text-sm text-[#1F1F1F] placeholder-[#8A8A8A] focus:outline-none focus:bg-white transition-all resize-none ${
+                      errors.message ? 'border-red-400' : 'border-[#F2E5D1] focus:border-[#8F0028]'
+                    }`}
+                  />
+                  {errors.message && <span className="text-[11px] font-mono text-red-600 block">{errors.message}</span>}
+                </div>
+
+                {/* Send Message Button */}
+                <div className="pt-2">
+                  <MagneticButton className="w-full">
                     <button
-                      onClick={handleCopyEmail}
-                      className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 transition-colors shrink-0 ml-2"
-                      title="Copy Email to Clipboard"
-                      aria-label="Copy Email"
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full inline-flex items-center justify-center gap-2 py-4 px-6 rounded-xl bg-[#8F0028] text-white text-xs font-bold tracking-wider uppercase hover:bg-[#5E001B] transition-all duration-200 shadow-sm cursor-pointer disabled:opacity-50"
                     >
-                      {copied ? (
-                        <Check className="w-4 h-4 text-emerald-600" />
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span>Transmitting Message...</span>
+                        </>
                       ) : (
-                        <Copy className="w-4 h-4" />
+                        <>
+                          <Send className="w-4 h-4" />
+                          <span>Send Message</span>
+                        </>
                       )}
                     </button>
-                  </div>
-                  {copied && (
-                    <p className="text-[11px] font-mono text-emerald-600">
-                      Email address copied to clipboard!
-                    </p>
-                  )}
+                  </MagneticButton>
                 </div>
-
-                {/* Location Card */}
-                <div className="space-y-2">
-                  <span className="text-xs font-mono text-zinc-500 uppercase tracking-wider block">
-                    Location
-                  </span>
-                  <div className="flex items-center gap-2.5 p-3.5 bg-white border border-zinc-200 rounded-xl shadow-sm">
-                    <MapPin className="w-4 h-4 text-blue-600 shrink-0" />
-                    <span className="text-xs sm:text-sm font-medium text-zinc-800">
-                      {personalInfo.location}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Target Company & Role Pill */}
-                <div className="p-4 bg-white border border-zinc-200 rounded-2xl shadow-sm space-y-2 text-xs">
-                  <div className="flex items-center justify-between">
-                    <span className="text-zinc-500">Target Role:</span>
-                    <span className="font-bold text-zinc-900">{personalInfo.targetRole}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-zinc-500">Target Company:</span>
-                    <span className="font-bold text-blue-600">{personalInfo.targetCompany}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-zinc-500">Status:</span>
-                    <span className="font-semibold text-emerald-600 font-mono">Fresher (2024–2028)</span>
-                  </div>
-                </div>
-
-                {/* Resume Download Action */}
-                <div className="pt-2">
-                  <a
-                    href={personalInfo.resumePdf}
-                    download="Sastha_K_Resume.pdf"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-zinc-900 hover:bg-blue-600 text-white font-semibold text-xs shadow transition-all duration-200"
-                  >
-                    <Download className="w-4 h-4" />
-                    <span>Download Official Resume</span>
-                  </a>
-                </div>
-
-              </div>
-            </TiltCard>
-          </motion.div>
-
-          {/* Right Column: Contact Message Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="lg:col-span-7"
-          >
-            <div className="bg-[#fafafa] border border-zinc-200 rounded-3xl p-7 sm:p-9 shadow-clean-md">
-              {isSuccess ? (
-                <div className="text-center py-12 space-y-4">
-                  <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto border border-emerald-200 shadow-sm">
-                    <Check className="w-7 h-7" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-zinc-900">
-                    Message Sent!
-                  </h3>
-                  <p className="text-zinc-700 text-sm sm:text-base font-medium max-w-md mx-auto">
-                    Message sent successfully! Thank you for contacting me.
-                  </p>
-                  <p className="text-zinc-500 text-xs max-w-sm mx-auto">
-                    A confirmation email has been dispatched to your inbox, and I will get back to you shortly.
-                  </p>
-                  <button
-                    onClick={() => {
-                      setIsSuccess(false);
-                      setErrorMessage('');
-                    }}
-                    className="mt-4 px-6 py-2.5 rounded-xl text-xs font-semibold bg-white border border-zinc-200 hover:bg-zinc-100 text-zinc-800 transition-colors shadow-sm"
-                  >
-                    Send Another Message
-                  </button>
-                </div>
-              ) : (
-                <form ref={formRef} onSubmit={handleSubmit} noValidate className="space-y-4">
-                  {/* Hidden field for EmailJS Reply-To compatibility */}
-                  <input type="hidden" name="reply_to" value={formData.email} />
-
-                  <div>
-                    <h3 className="text-lg font-bold text-zinc-900">
-                      Send a Message
-                    </h3>
-                    <p className="text-xs text-zinc-500 font-mono mt-0.5">
-                      Direct customer enquiry for projects, design feedback, or opportunities
-                    </p>
-                  </div>
-
-                  {/* Error Notification Banner */}
-                  {errorMessage && (
-                    <div
-                      role="alert"
-                      className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs sm:text-sm flex items-center gap-2.5 transition-all"
-                    >
-                      <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
-                      <span>{errorMessage}</span>
-                    </div>
-                  )}
-
-                  {/* Row 1: Full Name & Email Address */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                    <div className="space-y-1.5">
-                      <label htmlFor="name" className="block text-xs font-semibold text-zinc-700">
-                        Full Name <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        required
-                        value={formData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
-                        placeholder="e.g. Alex Johnson"
-                        className={`w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border ${
-                          errors.name ? 'border-red-400 bg-red-50/30' : 'border-zinc-200 bg-white'
-                        } focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all`}
-                      />
-                      {errors.name && (
-                        <p className="text-[11px] text-red-600 font-medium">{errors.name}</p>
-                      )}
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <label htmlFor="email" className="block text-xs font-semibold text-zinc-700">
-                        Email Address <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        placeholder="alex@company.com"
-                        className={`w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border ${
-                          errors.email ? 'border-red-400 bg-red-50/30' : 'border-zinc-200 bg-white'
-                        } focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all`}
-                      />
-                      {errors.email && (
-                        <p className="text-[11px] text-red-600 font-medium">{errors.email}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Row 2: Phone Number & Subject */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label htmlFor="phone" className="block text-xs font-semibold text-zinc-700">
-                        Phone Number <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        required
-                        value={formData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
-                        placeholder="+91 98765 43210"
-                        className={`w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border ${
-                          errors.phone ? 'border-red-400 bg-red-50/30' : 'border-zinc-200 bg-white'
-                        } focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all`}
-                      />
-                      {errors.phone && (
-                        <p className="text-[11px] text-red-600 font-medium">{errors.phone}</p>
-                      )}
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <label htmlFor="subject" className="block text-xs font-semibold text-zinc-700">
-                        Subject <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="subject"
-                        name="subject"
-                        required
-                        value={formData.subject}
-                        onChange={(e) => handleInputChange('subject', e.target.value)}
-                        placeholder="Design Consultation / Job Inquiry"
-                        className={`w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border ${
-                          errors.subject ? 'border-red-400 bg-red-50/30' : 'border-zinc-200 bg-white'
-                        } focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all`}
-                      />
-                      {errors.subject && (
-                        <p className="text-[11px] text-red-600 font-medium">{errors.subject}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Row 3: Message */}
-                  <div className="space-y-1.5">
-                    <label htmlFor="message" className="block text-xs font-semibold text-zinc-700">
-                      Message <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows={4}
-                      required
-                      value={formData.message}
-                      onChange={(e) => handleInputChange('message', e.target.value)}
-                      placeholder="Hello Sastha, I reviewed your portfolio and would like to discuss a project..."
-                      className={`w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border ${
-                        errors.message ? 'border-red-400 bg-red-50/30' : 'border-zinc-200 bg-white'
-                      } focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none`}
-                    />
-                    {errors.message && (
-                      <p className="text-[11px] text-red-600 font-medium">{errors.message}</p>
-                    )}
-                  </div>
-
-                  {/* Submit Button */}
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-zinc-900 text-white font-semibold text-xs sm:text-sm hover:bg-blue-600 shadow transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Sending...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Send Message</span>
-                        <Send className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
-                </form>
-              )}
+              </form>
             </div>
-          </motion.div>
 
+          </div>
         </div>
 
       </div>
     </section>
   );
 }
-

@@ -18,7 +18,7 @@ export default function Footer() {
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-[#8F0028] p-2 flex items-center justify-center flex-shrink-0 shadow-xs">
               <img
-                src="/logo.png"
+                src={personalInfo.logo}
                 alt="S"
                 className="w-full h-full object-contain"
               />

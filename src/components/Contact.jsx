@@ -7,9 +7,9 @@ import emailjs from '@emailjs/browser';
 import MagneticButton from './common/MagneticButton';
 
 // EmailJS Vite Environment Variables
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_selhr3g';
+const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_r4rpiqp';
+const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '2q9GymZvL2IlGewXW';
 
 export default function Contact() {
   const formRef = useRef(null);

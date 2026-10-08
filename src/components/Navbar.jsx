@@ -71,7 +71,7 @@ export default function Navbar() {
           {/* White S Logo with Transparent Background */}
           <div className="w-9 h-9 rounded-lg bg-[#8F0028] hover:bg-[#5E001B] p-1.5 flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-105 shadow-xs">
             <img
-              src="/logo.png"
+              src={personalInfo.logo}
               alt="S"
               className="w-full h-full object-contain"
             />

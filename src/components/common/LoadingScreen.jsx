@@ -36,7 +36,7 @@ export default function LoadingScreen({ onFinish }) {
           {/* Minimal 2D Editorial Logo Mark */}
           <div className="w-14 h-14 rounded-2xl bg-[#8F0028] p-3 flex items-center justify-center mb-6 shadow-md">
             <img
-              src={personalInfo.logo || "/logo.png"}
+              src={personalInfo.logo}
               alt="Sastha K Logo"
               className="w-full h-full object-contain"
             />

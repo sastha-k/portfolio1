@@ -1,3 +1,14 @@
+// Base path helper for GitHub Pages & universal deployment
+const BASE = import.meta.env.BASE_URL || '/';
+export const getAssetPath = (path) => {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
+    return path;
+  }
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  return `${BASE}${cleanPath}`;
+};
+
 export const personalInfo = {
   name: "Sastha K",
   title: "UI/UX Designer (Fresher)",
@@ -8,9 +19,9 @@ export const personalInfo = {
   status: "Available for Fresher Roles & Internships",
   email: "ssastha588@gmail.com",
   location: "Dindigul, Tamil Nadu",
-  photo: "/sastha.jpeg",
-  logo: "/logo.png",
-  resumePdf: "/resume.pdf",
+  photo: getAssetPath("/sastha.jpeg"),
+  logo: getAssetPath("/logo.png"),
+  resumePdf: getAssetPath("/resume.pdf"),
   objective:
     "Creative and detail-oriented B.Tech Information Technology student (2024-2028) seeking a UI/UX Designer Fresher role. Passionate about designing user-friendly digital experiences and eager to contribute with modern design thinking, prototyping, and problem-solving skills.",
   languages: [
@@ -112,7 +123,7 @@ export const skillsData = [
   }
 ];
 
-export const projectsData = [
+const rawProjectsData = [
   {
     id: "best-life-ai",
     title: "Best Life AI",
@@ -183,6 +194,11 @@ export const projectsData = [
   }
 ];
 
+export const projectsData = rawProjectsData.map((project) => ({
+  ...project,
+  image: getAssetPath(project.image),
+}));
+
 export const educationData = [
   {
     degree: "B.Tech in Information Technology",
@@ -208,7 +224,7 @@ export const experienceData = {
 };
 
 /* All 17 Authenticated Certificates (Cisco Networking Academy + certificatesastha.pdf) */
-export const certificatesList = [
+const rawCertificatesList = [
   {
     id: "cisco-modern-ai",
     title: "Introduction to Modern AI",
@@ -414,3 +430,9 @@ export const certificatesList = [
     details: "Certificate of Participation for active participation in the 24-Hours Hackathon organized under the IEEE Student Chapter, Chennai."
   }
 ];
+
+export const certificatesList = rawCertificatesList.map((cert) => ({
+  ...cert,
+  previewImage: getAssetPath(cert.previewImage),
+  fullDocument: getAssetPath(cert.fullDocument),
+}));

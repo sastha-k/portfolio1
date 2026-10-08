@@ -149,7 +149,7 @@ export default function PortraitCard3D() {
             <div className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden bg-[#FAF4EB]">
               {/* Photo Image: zoom 1.02 on hover, 100% stable crop & face */}
               <motion.img
-                src={personalInfo.photo || '/sastha.jpeg'}
+                src={personalInfo.photo}
                 alt={personalInfo.name}
                 animate={{
                   scale: isHovered && !shouldReduceMotion ? 1.02 : 1,

@@ -22,10 +22,11 @@ export default function Certificates() {
     'Other',
   ];
 
+  const list = certificatesList || [];
   const filteredCertificates =
     activeCategory === 'All'
-      ? certificatesList
-      : certificatesList.filter((c) => c.category === activeCategory);
+      ? list
+      : list.filter((c) => c && c.category === activeCategory);
 
   const handleOpenCert = (cert) => {
     const idx = certificatesList.findIndex((c) => c.id === cert.id);

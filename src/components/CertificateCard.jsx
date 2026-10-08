@@ -2,6 +2,7 @@ import React from 'react';
 import { Calendar, Building2, ArrowUpRight, ShieldCheck, Eye } from 'lucide-react';
 
 export default function CertificateCard({ cert, onView }) {
+  if (!cert) return null;
   return (
     <div
       onClick={() => onView(cert)}

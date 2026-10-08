@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { personalInfo } from '../../data/portfolioData';
 
 export default function LoadingScreen({ onFinish }) {
   const [progress, setProgress] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const onFinishRef = useRef(onFinish);
+  useEffect(() => {
+    onFinishRef.current = onFinish;
+  }, [onFinish]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -13,7 +18,7 @@ export default function LoadingScreen({ onFinish }) {
           clearInterval(timer);
           setTimeout(() => {
             setIsLoaded(true);
-            if (onFinish) onFinish();
+            if (onFinishRef.current) onFinishRef.current();
           }, 150);
           return 100;
         }
@@ -22,7 +27,7 @@ export default function LoadingScreen({ onFinish }) {
     }, 40);
 
     return () => clearInterval(timer);
-  }, [onFinish]);
+  }, []);
 
   return (
     <AnimatePresence>

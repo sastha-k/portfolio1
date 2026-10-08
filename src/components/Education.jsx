@@ -24,7 +24,7 @@ export default function Education() {
 
         {/* Education Card */}
         <div className="space-y-6">
-          {educationData.map((edu, idx) => (
+          {(educationData || []).map((edu, idx) => (
             <motion.div
               key={idx}
               initial={{

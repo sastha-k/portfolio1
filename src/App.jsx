@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import LoadingScreen from './components/common/LoadingScreen';
 import CustomCursor from './components/common/CustomCursor';
 import Navbar from './components/Navbar';
@@ -13,6 +13,10 @@ import Footer from './components/Footer';
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  const handleLoadingFinish = useCallback(() => {
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,7 +36,7 @@ export default function App() {
       <CustomCursor />
 
       {/* 2D Minimal Loading Screen */}
-      {loading && <LoadingScreen onFinish={() => setLoading(false)} />}
+      {loading && <LoadingScreen onFinish={handleLoadingFinish} />}
 
       <div className="min-h-screen bg-[#FCF8F2] text-[#1F1F1F] font-sans selection:bg-[#8F0028] selection:text-[#FCF8F2] relative">
         {/* Minimal Editorial Scroll Progress Bar */}

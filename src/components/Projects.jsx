@@ -30,7 +30,7 @@ export default function Projects() {
 
         {/* Distinct Product Showcase Cards (Varied Compositions) */}
         <div className="space-y-12 sm:space-y-16">
-          {projectsData.map((project, idx) => {
+          {(projectsData || []).map((project, idx) => {
             const projectNumber = `0${idx + 1}`;
             // Different composition rhythm based on index:
             // 0: Full-width flagship showcase

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import LoadingScreen from './components/common/LoadingScreen';
 import CustomCursor from './components/common/CustomCursor';
-import AnimatedBackground from './components/common/AnimatedBackground';
+import VideoBackground from './components/common/VideoBackground';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -40,8 +40,8 @@ export default function App() {
       {loading && <LoadingScreen onFinish={handleLoadingFinish} />}
 
       <div className="min-h-screen bg-[#FCF8F2] text-[#1F1F1F] font-sans selection:bg-[#8F0028] selection:text-[#FCF8F2] relative">
-        {/* Subtle, Premium Animated Background */}
-        <AnimatedBackground />
+        {/* Premium Animated Video Background Layer */}
+        <VideoBackground />
 
         {/* Minimal Editorial Scroll Progress Bar */}
         <div

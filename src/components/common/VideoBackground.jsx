@@ -2,38 +2,30 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getAssetPath } from '../../data/portfolioData';
 
 /**
- * Beautiful Cream and Beige Coastal Animated Video Background
- * 
- * Palette:
- * - Cream: #F5F0E8
- * - Warm Beige: #E8DCCB
- * - Soft Sand: #D8C3A5
- * - Existing Maroon Accent: #A0002D / #8F0028
- * - Text: #222222 / #1F1F1F
- * 
+ * Full-Site Batman Live Video Background
+ *
+ * Source: Local MP4 video (batman/video-1791783490902.mp4)
+ * Asset Path: public/videos/batman.mp4
+ *
  * Features:
- * - Subtle, realistic beach and ocean video with gentle waves and warm sunlight caustics
- * - Warm cream, ivory, and beige palette (no dark backgrounds, no harsh bright blues)
- * - Seamless looping, autoplay, muted, playsInline
- * - Non-blocking lazy deferred mounting so page load is instant
- * - High-res static cream coastal fallback image for slow connections and initial paint
- * - Full accessibility: respects prefers-reduced-motion (disables video, shows static fallback)
- * - Subtle cream atmosphere overlay ensuring text remains 100% readable
- * - Fully responsive across desktop, tablet, and mobile
- * - Zero pointer interference (pointer-events-none, z-0)
+ * - Native HTML5 <video> element with autoPlay, loop, muted, playsInline
+ * - Fixed fullscreen layer (fixed inset-0 w-full h-full pointer-events-none z-0) spanning top-to-bottom
+ * - object-cover object-center with subtle scale (scale-[1.04]) to eliminate any edge letterboxing
+ * - Instant paint with high-res poster fallback (/videos/batman-fallback.jpg)
+ * - Full accessibility: respects prefers-reduced-motion (freezes video, displays crisp poster)
+ * - Battery/CPU efficiency: pauses video when tab is hidden (document.hidden)
+ * - Calibrated multi-layer editorial tint overlay ensuring typography contrast and button clarity
+ *   on all devices (desktop, tablet, mobile) while highlighting Batman's glowing eyes and armor.
  */
-export default function VideoBackground() {
+export default function VideoBackground({ className = '' }) {
   const videoRef = useRef(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const [isVideoError, setIsVideoError] = useState(false);
-  const [shouldPlayVideo, setShouldPlayVideo] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
-  const videoWebm = getAssetPath('/background-coastal.webm');
-  const videoMp4 = getAssetPath('/background-coastal.mp4');
-  const fallbackImg = getAssetPath('/background-coastal-fallback.jpg');
+  const videoSrc = getAssetPath('/videos/batman.mp4');
+  const posterSrc = getAssetPath('/videos/batman-fallback.jpg');
 
-  // Check prefers-reduced-motion & defer loading until after mount
+  // Check prefers-reduced-motion
   useEffect(() => {
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setPrefersReducedMotion(motionQuery.matches);
@@ -48,99 +40,93 @@ export default function VideoBackground() {
       motionQuery.addListener(handleMotionChange);
     }
 
-    // Lazy defer video mount to prevent blocking critical initial paint
-    const timer = setTimeout(() => {
-      setShouldPlayVideo(true);
-    }, 100);
+    // Pause video when tab is hidden to save CPU/GPU resources
+    const handleVisibilityChange = () => {
+      if (!videoRef.current) return;
+      if (document.hidden) {
+        videoRef.current.pause();
+      } else if (!prefersReducedMotion) {
+        videoRef.current.play().catch(() => {});
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
-      clearTimeout(timer);
       if (motionQuery.removeEventListener) {
         motionQuery.removeEventListener('change', handleMotionChange);
       } else {
         motionQuery.removeListener(handleMotionChange);
       }
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, []);
-
-  // Handle tab visibility & reduced motion pause/play
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (prefersReducedMotion) {
-      video.pause();
-      return;
-    }
-
-    const handleVisibility = () => {
-      if (document.hidden) {
-        video.pause();
-      } else {
-        video.play().catch(() => {});
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibility);
-    return () => document.removeEventListener('visibilitychange', handleVisibility);
   }, [prefersReducedMotion]);
 
-  const handleCanPlay = () => {
-    setIsVideoLoaded(true);
+  // Ensure autoplay kicks in reliably
+  useEffect(() => {
     if (videoRef.current && !prefersReducedMotion) {
-      videoRef.current.play().catch(() => {});
+      videoRef.current.play().catch(() => {
+        // Autoplay policy fallback
+      });
     }
-  };
-
-  const handleError = () => {
-    setIsVideoError(true);
-  };
+  }, [prefersReducedMotion]);
 
   return (
     <div
-      className="fixed inset-0 w-full h-full pointer-events-none overflow-hidden z-0"
+      className={`fixed inset-0 w-full h-full pointer-events-none overflow-hidden z-0 select-none ${className}`}
       aria-hidden="true"
-      style={{ backgroundColor: '#F5F0E8' }}
+      style={{ backgroundColor: '#0d0f14' }}
     >
-      {/* 1. Base Static Cream Coastal Fallback Image (always present for instant paint) */}
+      {/* 1. Base Static High-Res Poster Fallback (instant paint, zero flash, reduced motion) */}
       <img
-        src={fallbackImg}
+        src={posterSrc}
         alt=""
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
-          isVideoLoaded && !prefersReducedMotion ? 'opacity-0' : 'opacity-100'
+        className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-700 ease-out ${
+          isVideoLoaded && !prefersReducedMotion ? 'opacity-0' : 'opacity-90'
         }`}
         loading="eager"
       />
 
-      {/* 2. Seamless Looping Realistic Coastal Video Layer */}
-      {shouldPlayVideo && !prefersReducedMotion && !isVideoError && (
+      {/* 2. Native HTML5 Video Element */}
+      {!prefersReducedMotion && (
         <video
           ref={videoRef}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
-            isVideoLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
+          src={videoSrc}
+          poster={posterSrc}
           autoPlay
-          muted
           loop
+          muted
           playsInline
-          poster={fallbackImg}
-          onCanPlay={handleCanPlay}
-          onError={handleError}
-        >
-          <source src={videoWebm} type="video/webm" />
-          <source src={videoMp4} type="video/mp4" />
-        </video>
+          preload="auto"
+          onLoadedData={() => setIsVideoLoaded(true)}
+          className={`absolute inset-0 w-full h-full object-cover object-center scale-[1.04] transition-opacity duration-700 ease-out ${
+            isVideoLoaded ? 'opacity-90' : 'opacity-0'
+          }`}
+          style={{
+            filter: 'contrast(1.08) brightness(0.95)',
+          }}
+        />
       )}
 
-      {/* 3. Subtle Cream & Warm Beige Atmosphere Overlay:
-          Delivers crystal-clear text readability over sand while letting the
-          coastal waves and warm sunlight caustics illuminate the background.
+      {/* 3. Calibrated Editorial Readability & Tint Overlay:
+          Ensures the charcoal body text (#1F1F1F), badges, project cards, and buttons
+          remain beautifully legible and clear across the entire site from top to bottom,
+          while letting Batman's silhouette, armor, and glowing eyes illuminate the screen.
       */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 30% 35%, rgba(245, 240, 232, 0.68) 0%, rgba(245, 240, 232, 0.46) 55%, rgba(232, 220, 203, 0.28) 100%)',
-          backdropFilter: 'blur(0.5px)',
+          background:
+            'radial-gradient(ellipse at 30% 25%, rgba(253, 246, 227, 0.85) 0%, rgba(253, 246, 227, 0.62) 42%, rgba(253, 246, 227, 0.38) 78%, rgba(253, 246, 227, 0.22) 100%)',
+        }}
+      />
+
+      {/* 4. Subtle Bottom Vignette: Guarantees footer text legibility */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-56 pointer-events-none"
+        style={{
+          background:
+            'linear-gradient(to top, rgba(253, 246, 227, 0.88) 0%, rgba(253, 246, 227, 0.45) 55%, transparent 100%)',
         }}
       />
     </div>

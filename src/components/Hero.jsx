@@ -12,9 +12,9 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-[82vh] lg:min-h-[86vh] flex items-center pt-28 pb-16 sm:pt-32 sm:pb-20 lg:pt-36 lg:pb-24 bg-transparent border-b border-[#F2E5D1]"
+      className="relative min-h-[82vh] lg:min-h-[86vh] flex items-center pt-28 pb-16 sm:pt-32 sm:pb-20 lg:pt-36 lg:pb-24 bg-transparent overflow-hidden border-b border-[#F2E5D1]"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Balanced Horizontal 45/55 Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           

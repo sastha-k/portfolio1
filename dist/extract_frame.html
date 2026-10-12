@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <video id="v" src="/videos/batman.mp4" muted playsinline crossOrigin="anonymous"></video>
+  <canvas id="c"></canvas>
+  <script>
+    const v = document.getElementById('v');
+    const c = document.getElementById('c');
+    v.onloadedmetadata = () => {
+      v.currentTime = 0.5;
+    };
+    v.onseeked = () => {
+      c.width = v.videoWidth || 1920;
+      c.height = v.videoHeight || 1080;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(v, 0, 0, c.width, c.height);
+      const data = c.toDataURL('image/jpeg', 0.85);
+      fetch('/save-frame', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: data, width: c.width, height: c.height })
+      });
+    };
+  </script>
+</body>
+</html>

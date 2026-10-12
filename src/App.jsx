@@ -39,8 +39,9 @@ export default function App() {
       {/* 2D Minimal Loading Screen */}
       {loading && <LoadingScreen onFinish={handleLoadingFinish} />}
 
-      <div className="min-h-screen bg-[#F5F0E8] text-[#222222] font-sans selection:bg-[#A0002D] selection:text-[#F5F0E8] relative">
-        {/* Coastal Animated Video Background Layer */}
+      <div className="min-h-screen bg-[#0d0f14] text-[#222222] font-sans selection:bg-[#A0002D] selection:text-[#FDF6E3] relative">
+
+        {/* Batman Live Video Background Running Top to Bottom Across Full Website */}
         <VideoBackground />
 
         {/* Minimal Editorial Scroll Progress Bar */}
